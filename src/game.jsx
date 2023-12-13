@@ -3,7 +3,9 @@ import Phaser from 'phaser';
 
 const GameComponent = () => {
   useEffect(() => {
-    // Define the Phaser game configuration
+    let player;
+    let cursors;
+
     const config = {
       type: Phaser.AUTO,
       width: 800,
@@ -11,8 +13,8 @@ const GameComponent = () => {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 300 },
-          debug: false, // Set this to true to view physics bodies
+          gravity: { y: 500 },
+          debug: false,
         },
       },
       scene: {
@@ -22,29 +24,47 @@ const GameComponent = () => {
       },
     };
 
-    // Initialize the Phaser game instance
     const game = new Phaser.Game(config);
 
-    // Preload assets
     function preload() {
-      // Load your game assets (images, sprites, etc.) here
-      // Example: this.load.image('platform', 'path/to/platform.png');
+      this.load.image('ground', 'https://via.placeholder.com/800x32/2ecc71');
+      this.load.image('player', 'https://via.placeholder.com/32x32/3498db');
     }
 
-    // Create game elements
     function create() {
-      // Create your game elements (platforms, player, etc.) here
-      // Example: this.platforms = this.physics.add.staticGroup();
-      // Example: this.platforms.create(400, 500, 'platform').setScale(2).refreshBody();
+      // Create ground
+      const ground = this.physics.add.staticImage(400, 568, 'ground').setScale(2).refreshBody();
+
+      // Create player
+      player = this.physics.add.sprite(100, 450, 'player');
+      player.setCollideWorldBounds(true);
+      player.body.setSize(24, 32); // Adjusting collision box size
+
+      // Collide the player with the ground
+      this.physics.add.collider(player, ground);
+
+      // Setup cursor keys for input
+      cursors = this.input.keyboard.createCursorKeys();
     }
 
-    // Update game state
     function update() {
-      // Update your game state (movements, collisions, etc.) here
+        // Reset player velocity
+        player.setVelocityX(0);
+        
+        // Player movement
+        if (cursors.left.isDown) {
+            player.setVelocityX(-160);
+        } else if (cursors.right.isDown) {
+            player.setVelocityX(160);
+        }
+        
+        // Player jump
+        if (cursors.up.isDown && player.body.onFloor()) {
+            player.setVelocityY(-330);
+        }
     }
 
     return () => {
-      // Clean up any resources if needed
       game.destroy(true);
     };
   }, []);
