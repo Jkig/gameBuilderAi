@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import Phaser from 'phaser';
+import reactLogo from './assets/react.svg'
+import grassBlock from './assets/grass_block.jpg';
 
 const GameComponent = () => {
   useEffect(() => {
@@ -13,7 +15,7 @@ const GameComponent = () => {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 500 },
+          gravity: { y: 800 },
           debug: false,
         },
       },
@@ -27,8 +29,9 @@ const GameComponent = () => {
     const game = new Phaser.Game(config);
 
     function preload() {
-      this.load.image('ground', 'https://via.placeholder.com/800x32/2ecc71');
-      this.load.image('player', 'https://via.placeholder.com/32x32/3498db');
+      // this.load.image('ground', "nothinglol");
+      // this.load.image('ground', grassBlock);
+      this.load.image('player', reactLogo);
     }
 
     function create() {
@@ -60,7 +63,7 @@ const GameComponent = () => {
         
         // Player jump
         if (cursors.up.isDown && player.body.onFloor()) {
-            player.setVelocityY(-330);
+            player.setVelocityY(-660);
         }
     }
 
